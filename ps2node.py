@@ -111,6 +111,7 @@ def modify_ps_output(cpu_numa):
 
     # Print first line with date and time info:
     stdout.write(stdin.readline())
+    LINE_NUMBER = 1
 
     # Loop over time reports.
     while True:
@@ -118,6 +119,7 @@ def modify_ps_output(cpu_numa):
         # Read and print second line with date and time info,
         # and find out in which column is processor number:
         line = stdin.readline()
+        LINE_NUMBER += 1
         columns = line.split()
         PROCESSOR_COLUMN = columns.index('PSR')
         NUMBER_OF_COLUMNS = len(columns)
@@ -130,6 +132,7 @@ def modify_ps_output(cpu_numa):
 
             # Read data line:
             line = stdin.readline()
+            LINE_NUMBER += 1
 
             # Check if there is correct number of columns:
             columns = line.split()
@@ -139,6 +142,9 @@ def modify_ps_output(cpu_numa):
                 # Check if end of file:
                 if line_length == 0:
                     status = 'EOF'
+                elif line_length > NUMBER_OF_COLUMNS:
+                    stderr.write("\nUnexpected data format at line {}.\nPlease check ps output.\n".format(LINE_NUMBER))
+                    exit(1)
                 break
 
             # Check if there is a number in PSR column:
