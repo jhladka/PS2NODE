@@ -123,16 +123,19 @@ def modify_ps_output(cpu_numa):
     Read ps output from stdin and add corresponding NUMA nodes.
     """
 
-    # Print first line with date and time info:
-    stdout.write(stdin.readline())
+    # Print first line if it's a line with date and time info:
     LINE_NUMBER = 1
+    line = stdin.readline()
+    if len(line.split()) == 1:
+        stdout.write(line)
+        line = stdin.readline()
+        LINE_NUMBER += 1
 
     # Loop over time reports.
     while True:
 
         # Read and print second line with date and time info,
         # and find out in which column is processor number:
-        line = stdin.readline()
         LINE_NUMBER += 1
         columns = line.split()
         PROCESSOR_COLUMN = columns.index('PSR')
@@ -148,15 +151,21 @@ def modify_ps_output(cpu_numa):
             line = stdin.readline()
             LINE_NUMBER += 1
 
-            # Check if there is correct number of columns:
-            columns = line.split()
+            columns = line.split()      # number of columns in line
             line_length = len(columns)
-            if line_length != NUMBER_OF_COLUMNS:
+            # Check if there is correct number of columns with data:
+            if line_length < NUMBER_OF_COLUMNS:
 
+                # Check if it's line with date and time:
+                if line_length == 1:
+                    stdout.write(line)
+                    line = stdin.readline()
+                    columns = line.split()
                 # Check if end of file:
-                if line_length == 0:
+                elif line_length == 0:
                     status = 'EOF'
-                elif line_length > NUMBER_OF_COLUMNS:
+                # Unexpected number of columns:
+                else:
                     stderr.write("\nUnexpected data format at line {}.\nPlease check ps output.\n".format(LINE_NUMBER))
                     exit(1)
                 break
@@ -169,13 +178,12 @@ def modify_ps_output(cpu_numa):
                 break
 
             # Look in dictionary and find corresponding number of NUMA node:
+            # Name of command can contain whitespace:
             numa_node = cpu_numa[processor]
             stdout.write("{} {}\n".format(line[:-1], numa_node))
 
         # write a line with date and time if no end of file:
-        if status != 'EOF':
-            stdout.write(line)
-        else:
+        if status == 'EOF':
             break
 
 
