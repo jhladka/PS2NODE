@@ -182,6 +182,10 @@ def modify_ps_output(cpu_numa):
             numa_node = cpu_numa[processor]
             stdout.write("{} {}\n".format(line[:-1], numa_node))
 
+        # Check for end of file:
+        if len(columns) == 0:
+            exit(0)
+
         # write a line with date and time if no end of file:
         if status == 'EOF':
             break
