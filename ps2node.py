@@ -70,7 +70,7 @@ done
         if os.access(args.lscpu, os.R_OK):
             return args.lscpu
         else:
-            stderr.write("File {} doesn't exist!\n".format(args.lscpu))
+            stderr.write("File {0} doesn't exist!\n".format(args.lscpu))
             exit(1)
 
     # If lscpu file isn't specified:
@@ -110,7 +110,7 @@ def CPU_NUMA(lscpu):
 
         # Check if all CPUs are associated with NUMA node:
         if len(cpu_numa) != cpu_nb:
-            stderr.write("CPU {} from ps file is not associated with any NUMA \
+            stderr.write("CPU {0} from ps file is not associated with any NUMA \
 node in lscpu file. Please check if ps file and lscpu file are from \
 the same server.\n".format(cpu_nb))
             exit(1)
@@ -140,7 +140,7 @@ def modify_ps_output(cpu_numa):
         columns = line.split()
         PROCESSOR_COLUMN = columns.index('PSR')
         NUMBER_OF_COLUMNS = len(columns)
-        stdout.write("{} {}\n".format(line[:-1], 'NUMA'))
+        stdout.write("{0} {1}\n".format(line[:-1], 'NUMA'))
 
         # To control end of file:
         status = 1
@@ -166,7 +166,7 @@ def modify_ps_output(cpu_numa):
                     status = 'EOF'
                 # Unexpected number of columns:
                 else:
-                    stderr.write("\nUnexpected data format at line {}.\nPlease check ps output.\n".format(LINE_NUMBER))
+                    stderr.write("\nUnexpected data format at line {0}.\nPlease check ps output.\n".format(LINE_NUMBER))
                     exit(1)
                 break
 
@@ -180,7 +180,7 @@ def modify_ps_output(cpu_numa):
             # Look in dictionary and find corresponding number of NUMA node:
             # Name of command can contain whitespace:
             numa_node = cpu_numa[processor]
-            stdout.write("{} {}\n".format(line[:-1], numa_node))
+            stdout.write("{0} {1}\n".format(line[:-1], numa_node))
 
         # Check for end of file:
         if len(columns) == 0:
