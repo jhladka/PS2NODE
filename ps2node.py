@@ -8,6 +8,7 @@ Read aggregation of CPUs from output of lscpu command.
 
 
 Copyright 2017, Jarmila Hladká
+Copyright 2020, Jirka Hladky, hladky DOT jiri AT gmail DOT com
 
 License:
 This program is free software: you can redistribute it and/or modify
@@ -40,7 +41,7 @@ def get_input():
 
 ./ps2node.py --lscpu lscpu.txt < ps.log
 or
-ps -L -o pid, lwp, psr, comm -p ${PID} | ./ps2node.py --lscpu <(lscpu)
+ps -L -o pid,lwp,psr,comm -p ${PID} | ./ps2node.py --lscpu <(lscpu)
 
 To process many files and replace original files:
 
@@ -57,7 +58,7 @@ done
 
 """
 
-    description = """Converts output of ps -L -o pid, lwp, psr, comm -p
+    description = """Converts output of ps -L -o pid,lwp,psr,comm -p
         by assigning NUMA node for processors."""
 
     parser = ArgumentParser(description=description, usage=usage)
