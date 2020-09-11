@@ -26,7 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from sys import stdin, stdout, stderr, exit
-
+import re
+#import pprint
+#pp = pprint.PrettyPrinter(indent=4)
 
 def get_input():
     """
@@ -88,6 +90,7 @@ def CPU_NUMA(lscpu):
     with open(lscpu) as lscpufile:
 
         cpu_numa = {}
+        NUMA_re=re.compile(r'NUMA.*CPU\(s\):')
 
         for line in lscpufile:
 
@@ -98,9 +101,10 @@ def CPU_NUMA(lscpu):
                 nodes_nb = int(line[13:])
 
             # Find NUMA nodes associated with CPUs:
-            if line[:9] == 'NUMA node':
+            if NUMA_re.search(line):
                 words = line.split()
                 cpus = words[-1].split(',')
+                #pp.pprint(cpus)
                 for cpu in cpus:
                     if '-' in cpu:
                         w = cpu.split('-')
@@ -109,6 +113,8 @@ def CPU_NUMA(lscpu):
                     else:
                         cpu_numa[cpu] = words[1][-1:]
 
+        #pp.pprint(cpu_numa)
+        #pp.pprint(cpu_nb)
         # Check if all CPUs are associated with NUMA node:
         if len(cpu_numa) != cpu_nb:
             stderr.write("CPU {0} from ps file is not associated with any NUMA \
